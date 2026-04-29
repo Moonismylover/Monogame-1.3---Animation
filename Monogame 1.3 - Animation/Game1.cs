@@ -9,6 +9,18 @@ namespace Monogame_1._3___Animation
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Rectangle window;
+
+        Texture2D brown;
+        Texture2D cream;
+        Texture2D grey;
+        Texture2D orange;
+
+        Rectangle brownRect;
+        Rectangle creamRect;
+        Rectangle greyRect;
+        Rectangle orangeRect;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,7 +30,12 @@ namespace Monogame_1._3___Animation
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            window = new Rectangle(0, 0, 800, 600);
+
+            brownRect = new Rectangle(0, 0, 200, 170);
+            creamRect = new Rectangle(300, 400, 120, 80);
+            greyRect = new Rectangle(300, 10, 100, 100);
+            orangeRect = new Rectangle(500, 200, 220, 220);
 
             base.Initialize();
         }
@@ -27,7 +44,10 @@ namespace Monogame_1._3___Animation
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            brown = Content.Load<Texture2D>("tribbleBrown");
+            cream = Content.Load<Texture2D>("tribbleCream");
+            grey = Content.Load<Texture2D>("tribbleGrey");
+            orange = Content.Load<Texture2D>("tribbleOrange");
         }
 
         protected override void Update(GameTime gameTime)
@@ -42,9 +62,14 @@ namespace Monogame_1._3___Animation
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.BlanchedAlmond);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(brown, brownRect, Color.White);
+            _spriteBatch.Draw(cream, creamRect, Color.White);
+            _spriteBatch.Draw(grey, greyRect, Color.White);
+            _spriteBatch.Draw(orange, orangeRect, Color.White);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
