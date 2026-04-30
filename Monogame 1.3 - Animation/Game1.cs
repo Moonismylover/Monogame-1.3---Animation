@@ -54,8 +54,8 @@ namespace Monogame_1._3___Animation
             greyRect = new Rectangle(300, 10, 100, 100);
             orangeRect = new Rectangle(500, 200, 220, 220);
 
-            brownSpeed = new Vector2(-2, 0);
-            creamSpeed = new Vector2(2, -2);
+            brownSpeed = new Vector2(2, 0);
+            creamSpeed = new Vector2(1, 1);
             greySpeed = new Vector2(3, 4);
             orangeSpeed = new Vector2(9, -9);
 
@@ -87,21 +87,24 @@ namespace Monogame_1._3___Animation
             orangeRect.X += (int)orangeSpeed.X;
             orangeRect.Y += (int)orangeSpeed.Y;
 
-            if (brownRect.Right > window.Width || brownRect.Left < 0)
+            if (brownRect.Left > window.Width)
             {
-                brownSpeed.X *= -1;
-                tribbleCoo.Play();
-                bgColor = Color.DarkBlue;
+                brownRect.X = -brownRect.Width;
+            }
+            if (brownRect.Right < 0)
+            {
+                brownRect.X = window.Width;
             }
             if (brownRect.Bottom > window.Height || brownRect.Top < 0)
             {
                 brownSpeed.Y *= -1;
-                tribbleCoo.Play();
             }
 
             if (creamRect.Right > window.Width || creamRect.Left < 0)
             {
                 creamSpeed.X *= -1;
+                creamSpeed.X += (int)0.5;
+                creamSpeed.Y *= (int)0.5;
                 creamColor = Color.BlueViolet;
             }
             if (creamRect.Bottom > window.Height || creamRect.Top < 0)
@@ -111,21 +114,22 @@ namespace Monogame_1._3___Animation
                 creamSpeed.Y *= -1;
             }
 
-            if (greyRect.Right > window.Width)
+            if (greyRect.Right > window.Width || greyRect.Left < 0)
             {
-                greyRect.X = 0;
+                greyRect.X *= -1;
+                tribbleCoo.Play();
             }
             if (greyRect.Bottom > window.Height || greyRect.Top < 0)
             {
                 greySpeed.Y *= -1;
                 greyColor = Color.LightPink;
+                tribbleCoo.Play();
             }
 
             if (orangeRect.Right > window.Width || orangeRect.Left < 0)
             {
-                orangeSpeed.Y /= 2;
-                orangeSpeed.X /= 2;
                 orangeSpeed.X *= -1;
+                bgColor = Color.DarkBlue;
             }
             if (orangeRect.Bottom > window.Height || orangeRect.Top < 0)
             {
