@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
+using System.Data.Common;
 
 namespace Monogame_1._3___Animation
 {
@@ -26,6 +28,10 @@ namespace Monogame_1._3___Animation
         Vector2 creamSpeed;
         Vector2 greySpeed;
         Vector2 orangeSpeed;
+
+        Color bgColor = Color.Black;
+        Color creamColor = Color.White;
+        Color greyColor = Color.White;  
 
         SoundEffect tribbleCoo;
 
@@ -84,56 +90,62 @@ namespace Monogame_1._3___Animation
             if (brownRect.Right > window.Width || brownRect.Left < 0)
             {
                 brownSpeed.X *= -1;
+                tribbleCoo.Play();
+                bgColor = Color.DarkBlue;
             }
             if (brownRect.Bottom > window.Height || brownRect.Top < 0)
             {
                 brownSpeed.Y *= -1;
+                tribbleCoo.Play();
             }
 
             if (creamRect.Right > window.Width || creamRect.Left < 0)
             {
                 creamSpeed.X *= -1;
+                creamColor = Color.BlueViolet;
             }
             if (creamRect.Bottom > window.Height || creamRect.Top < 0)
             {
+                creamRect.X = 120;
+                creamRect.Y = 120;
                 creamSpeed.Y *= -1;
             }
 
-            if (greyRect.Right > window.Width || greyRect.Left < 0)
+            if (greyRect.Right > window.Width)
             {
-                greySpeed.X *= -1;
+                greyRect.X = 0;
             }
             if (greyRect.Bottom > window.Height || greyRect.Top < 0)
             {
                 greySpeed.Y *= -1;
+                greyColor = Color.LightPink;
             }
 
             if (orangeRect.Right > window.Width || orangeRect.Left < 0)
             {
+                orangeSpeed.Y /= 2;
+                orangeSpeed.X /= 2;
                 orangeSpeed.X *= -1;
             }
             if (orangeRect.Bottom > window.Height || orangeRect.Top < 0)
             {
                 orangeSpeed.Y *= -1;
+                bgColor = Color.DarkSeaGreen;
             }
 
-            if (brownRect.Right > window.Width || brownRect.X < 0)
-            {
-                brownSpeed.X *= -1;
-                tribbleCoo.Play();
-            }
+
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.BlanchedAlmond);
+            GraphicsDevice.Clear(bgColor);
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(brown, brownRect, Color.White);
-            _spriteBatch.Draw(cream, creamRect, Color.White);
-            _spriteBatch.Draw(grey, greyRect, Color.White);
+            _spriteBatch.Draw(cream, creamRect, creamColor);
+            _spriteBatch.Draw(grey, greyRect, greyColor);
             _spriteBatch.Draw(orange, orangeRect, Color.White);
             _spriteBatch.End();
 
