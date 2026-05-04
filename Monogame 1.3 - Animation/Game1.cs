@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
 using System.Data.Common;
+using System;
 
 namespace Monogame_1._3___Animation
 {
@@ -35,6 +36,8 @@ namespace Monogame_1._3___Animation
 
         SoundEffect tribbleCoo;
 
+        Random generator = new Random();
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -57,7 +60,16 @@ namespace Monogame_1._3___Animation
             brownSpeed = new Vector2(2, 0);
             creamSpeed = new Vector2(1, 1);
             greySpeed = new Vector2(3, 4);
-            orangeSpeed = new Vector2(9, -9);
+            orangeSpeed = new Vector2(5, -5);
+
+            brownRect.X = generator.Next(0, window.Width - brownRect.Width);
+            brownRect.Y = generator.Next(0, window.Height - brownRect.Height);
+            creamRect.X = generator.Next(0, window.Width - creamRect.Width);
+            creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
+            greyRect.X = generator.Next(0, window.Width - greyRect.Width);
+            greyRect.Y = generator.Next(0, window.Height - greyRect.Height);
+            orangeRect.X = generator.Next(0, window.Width - orangeRect.Width);  
+            orangeRect.Y = generator.Next(0, window.Height - orangeRect.Height);
 
             base.Initialize();
         }
@@ -102,21 +114,22 @@ namespace Monogame_1._3___Animation
 
             if (creamRect.Right > window.Width || creamRect.Left < 0)
             {
+                creamRect.X = generator.Next(0, window.Width - creamRect.Width);
+                creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
                 creamSpeed.X *= -1;
-                creamSpeed.X += (int)0.5;
-                creamSpeed.Y *= (int)0.5;
                 creamColor = Color.BlueViolet;
             }
             if (creamRect.Bottom > window.Height || creamRect.Top < 0)
             {
-                creamRect.X = 120;
-                creamRect.Y = 120;
+                creamRect.X = generator.Next(0, window.Width - creamRect.Width);
+                creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
+                creamColor = Color.CadetBlue;
                 creamSpeed.Y *= -1;
             }
 
             if (greyRect.Right > window.Width || greyRect.Left < 0)
             {
-                greyRect.X *= -1;
+                greySpeed.X *= -1;
                 tribbleCoo.Play();
             }
             if (greyRect.Bottom > window.Height || greyRect.Top < 0)
@@ -136,8 +149,6 @@ namespace Monogame_1._3___Animation
                 orangeSpeed.Y *= -1;
                 bgColor = Color.DarkSeaGreen;
             }
-
-
 
             base.Update(gameTime);
         }
