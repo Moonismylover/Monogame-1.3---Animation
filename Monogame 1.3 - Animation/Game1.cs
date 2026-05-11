@@ -10,6 +10,15 @@ namespace Monogame_1._3___Animation
 {
     public class Game1 : Game
     {
+        enum Screen
+        {
+            Intro,
+            TribbleYard,
+            End
+        }
+
+        Screen screen;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -19,6 +28,7 @@ namespace Monogame_1._3___Animation
         Texture2D cream;
         Texture2D grey;
         Texture2D orange;
+        Texture2D tribbleIntro;
 
         Rectangle brownRect;
         Rectangle creamRect;
@@ -37,6 +47,12 @@ namespace Monogame_1._3___Animation
         SoundEffect tribbleCoo;
 
         Random generator = new Random();
+
+        MouseState mouseState;
+
+        SpriteFont Text;
+        SpriteFont Text_two;
+        SpriteFont Text_three;
 
         public Game1()
         {
@@ -71,6 +87,8 @@ namespace Monogame_1._3___Animation
             orangeRect.X = generator.Next(0, window.Width - orangeRect.Width);  
             orangeRect.Y = generator.Next(0, window.Height - orangeRect.Height);
 
+            screen = Screen.Intro;
+
             base.Initialize();
         }
 
@@ -83,6 +101,10 @@ namespace Monogame_1._3___Animation
             grey = Content.Load<Texture2D>("tribbleGrey");
             orange = Content.Load<Texture2D>("tribbleOrange");
             tribbleCoo = Content.Load<SoundEffect>("tribble_coo");
+            tribbleIntro = Content.Load<Texture2D>("tribble_intro");
+            Text = Content.Load<SpriteFont>("Text");
+            Text_two = Content.Load<SpriteFont>("Text_two");    
+            Text_three = Content.Load<SpriteFont>("Text_three");
         }
 
         protected override void Update(GameTime gameTime)
@@ -90,67 +112,85 @@ namespace Monogame_1._3___Animation
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            brownRect.X += (int)brownSpeed.X;
-            brownRect.Y += (int)brownSpeed.Y;
-            creamRect.X += (int)creamSpeed.X;
-            creamRect.Y += (int)creamSpeed.Y;
-            greyRect.X += (int)greySpeed.X;
-            greyRect.Y += (int)greySpeed.Y;
-            orangeRect.X += (int)orangeSpeed.X;
-            orangeRect.Y += (int)orangeSpeed.Y;
+            mouseState = Mouse.GetState();
 
-            if (brownRect.Left > window.Width)
+            if (screen == Screen.Intro)
             {
-                brownRect.X = -brownRect.Width;
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                    screen = Screen.TribbleYard;
             }
-            if (brownRect.Right < 0)
+            else if (screen == Screen.TribbleYard)
             {
-                brownRect.X = window.Width;
+                brownRect.X += (int)brownSpeed.X;
+                brownRect.Y += (int)brownSpeed.Y;
+                creamRect.X += (int)creamSpeed.X;
+                creamRect.Y += (int)creamSpeed.Y;
+                greyRect.X += (int)greySpeed.X;
+                greyRect.Y += (int)greySpeed.Y;
+                orangeRect.X += (int)orangeSpeed.X;
+                orangeRect.Y += (int)orangeSpeed.Y;
+
+                if (brownRect.Left > window.Width)
+                {
+                    brownRect.X = -brownRect.Width;
+                }
+                if (brownRect.Right < 0)
+                {
+                    brownRect.X = window.Width;
+                }
+                if (brownRect.Bottom > window.Height || brownRect.Top < 0)
+                {
+                    brownSpeed.Y *= -1;
+                }
+
+                if (creamRect.Right > window.Width || creamRect.Left < 0)
+                {
+                    creamRect.X = generator.Next(0, window.Width - creamRect.Width);
+                    creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
+                    creamSpeed.X *= -1;
+                    creamColor = Color.BlueViolet;
+                }
+                if (creamRect.Bottom > window.Height || creamRect.Top < 0)
+                {
+                    creamRect.X = generator.Next(0, window.Width - creamRect.Width);
+                    creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
+                    creamColor = Color.CadetBlue;
+                    creamSpeed.Y *= -1;
+                }
+
+                if (greyRect.Right > window.Width || greyRect.Left < 0)
+                {
+                    greySpeed.X *= -1;
+                    tribbleCoo.Play();
+                }
+                if (greyRect.Bottom > window.Height || greyRect.Top < 0)
+                {
+                    greySpeed.Y *= -1;
+                    greyColor = Color.LightPink;
+                    tribbleCoo.Play();
+                }
+
+                if (orangeRect.Right > window.Width || orangeRect.Left < 0)
+                {
+                    orangeSpeed.X *= -1;
+                    bgColor = Color.DarkBlue;
+                }
+                if (orangeRect.Bottom > window.Height || orangeRect.Top < 0)
+                {
+                    orangeSpeed.Y *= -1;
+                    bgColor = Color.DarkSeaGreen;
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                    screen = Screen.End;
             }
-            if (brownRect.Bottom > window.Height || brownRect.Top < 0)
+            else if (screen == Screen.End)
             {
-                brownSpeed.Y *= -1;
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                    Exit();
             }
 
-            if (creamRect.Right > window.Width || creamRect.Left < 0)
-            {
-                creamRect.X = generator.Next(0, window.Width - creamRect.Width);
-                creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
-                creamSpeed.X *= -1;
-                creamColor = Color.BlueViolet;
-            }
-            if (creamRect.Bottom > window.Height || creamRect.Top < 0)
-            {
-                creamRect.X = generator.Next(0, window.Width - creamRect.Width);
-                creamRect.Y = generator.Next(0, window.Height - creamRect.Height);
-                creamColor = Color.CadetBlue;
-                creamSpeed.Y *= -1;
-            }
-
-            if (greyRect.Right > window.Width || greyRect.Left < 0)
-            {
-                greySpeed.X *= -1;
-                tribbleCoo.Play();
-            }
-            if (greyRect.Bottom > window.Height || greyRect.Top < 0)
-            {
-                greySpeed.Y *= -1;
-                greyColor = Color.LightPink;
-                tribbleCoo.Play();
-            }
-
-            if (orangeRect.Right > window.Width || orangeRect.Left < 0)
-            {
-                orangeSpeed.X *= -1;
-                bgColor = Color.DarkBlue;
-            }
-            if (orangeRect.Bottom > window.Height || orangeRect.Top < 0)
-            {
-                orangeSpeed.Y *= -1;
-                bgColor = Color.DarkSeaGreen;
-            }
-
-            base.Update(gameTime);
+                base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -158,11 +198,24 @@ namespace Monogame_1._3___Animation
             GraphicsDevice.Clear(bgColor);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(brown, brownRect, Color.White);
-            _spriteBatch.Draw(cream, creamRect, creamColor);
-            _spriteBatch.Draw(grey, greyRect, greyColor);
-            _spriteBatch.Draw(orange, orangeRect, Color.White);
-            _spriteBatch.End();
+            if (screen == Screen.Intro)
+            {
+                _spriteBatch.Draw(tribbleIntro, window, Color.White);
+                _spriteBatch.DrawString(Text, "Click to enter the Tribble Yard!", new Vector2(50, 250), Color.White);
+            }
+            else if (screen == Screen.TribbleYard)
+            {
+                _spriteBatch.Draw(brown, brownRect, Color.White);
+                _spriteBatch.Draw(cream, creamRect, creamColor);
+                _spriteBatch.Draw(grey, greyRect, greyColor);
+                _spriteBatch.Draw(orange, orangeRect, Color.White);
+                _spriteBatch.DrawString(Text_two, "Click to exit the Tribble Yard!", new Vector2(50, 550), Color.Red);
+            }
+            else if (screen == Screen.End)
+            {
+                _spriteBatch.DrawString(Text_three, "Thank for playing! Click to exit.", new Vector2(50, 250), Color.White);
+            }
+                _spriteBatch.End();
 
             base.Draw(gameTime);
         }
