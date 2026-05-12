@@ -45,11 +45,14 @@ namespace Monogame_1._3___Animation
         Color greyColor = Color.White;  
 
         SoundEffect tribbleCoo;
+        SoundEffect music;
+        SoundEffectInstance musicInstance;
 
         float seconds;
         Random generator = new Random();
 
         MouseState mouseState;
+        MouseState previousMouseState;
 
         SpriteFont Text;
         SpriteFont Text_two;
@@ -108,6 +111,8 @@ namespace Monogame_1._3___Animation
             Text = Content.Load<SpriteFont>("Text");
             Text_two = Content.Load<SpriteFont>("Text_two");    
             Text_three = Content.Load<SpriteFont>("Text_three");
+            music = Content.Load<SoundEffect>("Gata_Only");
+            musicInstance = music.CreateInstance();
         }
 
         protected override void Update(GameTime gameTime)
@@ -117,15 +122,22 @@ namespace Monogame_1._3___Animation
 
             mouseState = Mouse.GetState();
 
-            seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (screen == Screen.Intro)
             {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                musicInstance.Play();
+
+                if (mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
+                {
                     screen = Screen.TribbleYard;
+                    musicInstance.Pause();
+                    seconds = 0;
+                }
             }
             else if (screen == Screen.TribbleYard)
             {
+                seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
                 brownRect.X += (int)brownSpeed.X;
                 brownRect.Y += (int)brownSpeed.Y;
                 creamRect.X += (int)creamSpeed.X;
@@ -186,20 +198,28 @@ namespace Monogame_1._3___Animation
                     bgColor = Color.DarkSeaGreen;
                 }
 
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
                     screen = Screen.End;
             }
             
             if (screen == Screen.TribbleYard && seconds >= 20)
             {
                 screen = Screen.End;
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                musicInstance.Resume();
+            }
+
+            if (screen == Screen.End)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
                 {
+                    musicInstance.Stop();
                     Exit();
                 }
             }
 
-                base.Update(gameTime);
+            previousMouseState = mouseState;
+
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -218,7 +238,7 @@ namespace Monogame_1._3___Animation
                 _spriteBatch.Draw(cream, creamRect, creamColor);
                 _spriteBatch.Draw(grey, greyRect, greyColor);
                 _spriteBatch.Draw(orange, orangeRect, Color.White);
-                _spriteBatch.DrawString(Text_two, "Click to exit the Tribble Yard!", new Vector2(50, 550), Color.Red);
+                _spriteBatch.DrawString(Text_two, "Watch for 20 seconds! THEN AUTOMATIC EXIT!", new Vector2(50, 550), Color.Red);
             }
             else if (screen == Screen.End)
             {

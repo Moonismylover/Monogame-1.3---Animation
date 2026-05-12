@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Gata_Only.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Gata_Only.wav
+
 #begin Text_three.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
