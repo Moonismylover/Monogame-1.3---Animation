@@ -46,6 +46,7 @@ namespace Monogame_1._3___Animation
 
         SoundEffect tribbleCoo;
 
+        float seconds;
         Random generator = new Random();
 
         MouseState mouseState;
@@ -89,6 +90,8 @@ namespace Monogame_1._3___Animation
 
             screen = Screen.Intro;
 
+            seconds = 0;
+
             base.Initialize();
         }
 
@@ -113,6 +116,8 @@ namespace Monogame_1._3___Animation
                 Exit();
 
             mouseState = Mouse.GetState();
+
+            seconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (screen == Screen.Intro)
             {
@@ -184,10 +189,14 @@ namespace Monogame_1._3___Animation
                 if (mouseState.LeftButton == ButtonState.Pressed)
                     screen = Screen.End;
             }
-            else if (screen == Screen.End)
+            
+            if (screen == Screen.TribbleYard && seconds >= 20)
             {
+                screen = Screen.End;
                 if (mouseState.LeftButton == ButtonState.Pressed)
+                {
                     Exit();
+                }
             }
 
                 base.Update(gameTime);
